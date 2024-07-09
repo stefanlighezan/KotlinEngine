@@ -1,6 +1,10 @@
 package renderer
 
+import java.awt.BorderLayout
+import java.awt.Panel
 import javax.swing.JFrame
+import javax.swing.JPanel
+import javax.swing.SpringLayout
 import javax.swing.WindowConstants
 
 class Window(
@@ -16,6 +20,12 @@ class Window(
         setSize(width, height)
         isVisible = visible
         isResizable = resizable
+    }
+
+    val panel = JPanel(SpringLayout())
+
+    init {
+        frame.contentPane.add(panel)
     }
 
     fun setTitle(title: String) {

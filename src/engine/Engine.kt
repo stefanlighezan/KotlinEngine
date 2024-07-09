@@ -2,15 +2,16 @@ package engine
 
 import renderer.Window
 
-class Engine(private val window: Window, private val fps: Int) {
+class Engine(val window: Window, private val fps: Int) {
     private var currentSceneIndex: Int = 0
     private val scenes: ArrayList<Scene> = arrayListOf()
 
     private fun Start() {
+
         scenes[currentSceneIndex].Start()
 
         scenes[currentSceneIndex].objects.forEach { obj ->
-            window.frame.add(obj.renderable)
+            window.panel.add(obj.renderable)
         }
     }
 

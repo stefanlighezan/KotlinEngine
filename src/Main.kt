@@ -1,15 +1,14 @@
 import datatypes.Color
 import datatypes.Shapes
 import datatypes.Vector2
-import engine.Engine
-import engine.Object
-import engine.Scene
-import engine.Renderable
+import engine.*
 import renderer.Window
 
 fun main() {
     val window = Window("Game Window", 800, 600, visible = true, resizable = false, exitOnClose = true)
     val scene = Scene()
+    val inputManager = InputManager()
+    inputManager.attachTo(window.panel)
 
     val obj = Object().apply {
         renderable = Renderable(
@@ -17,23 +16,35 @@ fun main() {
             h = 100,
             position = Vector2(0f, 100f),
             color = Color(255, 0, 0, 255),
-            type = Shapes.ELLIPSE
+            type = Shapes.RECTANGLE
         )
     }
 
-    scene.apply {
-        addObject(obj)
-        setStartFunction {
-            println("Started App")
-        }
-        setUpdateFunction {
-            scene.objects[0].renderable!!.type = Shapes.RECTANGLE
-            println("Running")
+    scene.gameEngine = Engine(window, 60)
+    scene.addObject(obj)
+
+    scene.setStartFunction {
+        println("Started App")
+    }
+
+    scene.setUpdateFunction { deltaTime ->
+        if (inputManager.isMouseButtonDown(0)) {
+            val obj2 = Object().apply {
+                renderable = Renderable(
+                    w = 100,
+                    h = 100,
+                    position = Vector2(inputManager.getMouseX().toFloat(), inputManager.getMouseY().toFloat()),
+                    color = Color(0, 0, 0, 100),
+                    type = Shapes.ELLIPSE
+                )
+            }
+            scene.addObject(obj2)
+            println("(${inputManager.getMouseX()}, ${inputManager.getMouseY()})")
+            inputManager.reset() // Reset mouse click state
         }
     }
 
-    val engine = Engine(window, 60).apply {
-        addScene(scene)
-        run()
-    }
+    scene.gameEngine.addScene(scene)
+    scene.gameEngine.run()
 }
+

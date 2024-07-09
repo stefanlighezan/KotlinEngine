@@ -1,6 +1,9 @@
 package engine
 
+import javax.swing.SwingUtilities
+
 class Scene {
+    lateinit var gameEngine: Engine
     val objects: ArrayList<Object> = arrayListOf()
     private var startFunction: (() -> Unit)? = null
     private var updateFunction: ((Float) -> Unit)? = null
@@ -23,7 +26,8 @@ class Scene {
         updateFunction?.invoke(deltaTime)
     }
 
-    fun base() {
+    private fun base() {
+        println(objects.size)
         objects.forEach { obj ->
             obj.renderObject()
         }
@@ -31,9 +35,16 @@ class Scene {
 
     fun addObject(obj: Object) {
         objects.add(obj)
+        obj.renderable!!.render()
+        obj.renderable!!.repaint()
     }
 
     fun deleteObject(obj: Object) {
         objects.remove(obj)
+        SwingUtilities.invokeLater {
+            gameEngine.window.panel.remove(obj.renderable)
+            gameEngine.window.panel.revalidate()
+            gameEngine.window.panel.repaint()
+        }
     }
 }
