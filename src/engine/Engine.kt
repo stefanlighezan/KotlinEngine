@@ -2,9 +2,36 @@ package engine
 
 import renderer.Window
 
-class Engine(val window: Window) {
+class Engine(val window: Window, private val fps: Int) {
     private var currentSceneIndex: Int = 0
     private val scenes: ArrayList<Scene> = arrayListOf()
 
+    fun Start() {
+        scenes[currentSceneIndex].Start()
+    }
 
+    fun Update(deltaTime: Float) {
+        scenes[currentSceneIndex].Update(deltaTime)
+    }
+
+    fun run() {
+        Start() // Initial call to Start
+
+        val frameTime = 1000 / fps // Time in milliseconds per frame
+        var lastFrameTime = System.currentTimeMillis()
+
+        while (true) {
+            val currentTime = System.currentTimeMillis()
+            val deltaTime = (currentTime - lastFrameTime) / 1000.0f // Delta time in seconds
+
+            if (deltaTime >= 1.0f / fps) {
+                Update(deltaTime)
+                lastFrameTime = currentTime
+            }
+        }
+    }
+
+    public fun addScene(scene: Scene) {
+        scenes.add(scene)
+    }
 }
