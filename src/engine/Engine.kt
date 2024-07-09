@@ -2,15 +2,19 @@ package engine
 
 import renderer.Window
 
-class Engine(val window: Window, private val fps: Int) {
+class Engine(private val window: Window, private val fps: Int) {
     private var currentSceneIndex: Int = 0
     private val scenes: ArrayList<Scene> = arrayListOf()
 
-    fun Start() {
+    private fun Start() {
         scenes[currentSceneIndex].Start()
+
+        scenes[currentSceneIndex].objects.forEach { obj ->
+            window.frame.add(obj.renderable)
+        }
     }
 
-    fun Update(deltaTime: Float) {
+    private fun Update(deltaTime: Float) {
         scenes[currentSceneIndex].Update(deltaTime)
     }
 
@@ -31,7 +35,7 @@ class Engine(val window: Window, private val fps: Int) {
         }
     }
 
-    public fun addScene(scene: Scene) {
+    fun addScene(scene: Scene) {
         scenes.add(scene)
     }
 }

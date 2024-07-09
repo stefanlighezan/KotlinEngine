@@ -11,13 +11,11 @@ class Window(
     resizable: Boolean = false,
     exitOnClose: Boolean = true
 ) {
-    private val frame: JFrame = JFrame(title)
-
-    init {
-        frame.defaultCloseOperation = if (exitOnClose) WindowConstants.EXIT_ON_CLOSE else WindowConstants.DISPOSE_ON_CLOSE
-        frame.setSize(width, height)
-        frame.isVisible = visible
-        frame.isResizable = resizable
+    val frame: JFrame = JFrame(title).apply {
+        defaultCloseOperation = if (exitOnClose) WindowConstants.EXIT_ON_CLOSE else WindowConstants.DISPOSE_ON_CLOSE
+        setSize(width, height)
+        isVisible = visible
+        isResizable = resizable
     }
 
     fun setTitle(title: String) {

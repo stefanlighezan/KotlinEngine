@@ -1,7 +1,7 @@
 package engine
 
 class Scene {
-    private val objects: ArrayList<Object> = arrayListOf()
+    val objects: ArrayList<Object> = arrayListOf()
     private var startFunction: (() -> Unit)? = null
     private var updateFunction: ((Float) -> Unit)? = null
 
@@ -14,15 +14,19 @@ class Scene {
     }
 
     fun Start() {
+        base()
         startFunction?.invoke()
     }
 
     fun Update(deltaTime: Float) {
-        objects.forEach { obj ->
-            obj.render()
-        }
-        //updateFunction?.invoke(deltaTime)
+        base()
+        updateFunction?.invoke(deltaTime)
+    }
 
+    fun base() {
+        objects.forEach { obj ->
+            obj.renderObject()
+        }
     }
 
     fun addObject(obj: Object) {

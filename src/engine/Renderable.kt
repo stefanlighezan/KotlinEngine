@@ -1,31 +1,50 @@
 package engine
 
 import datatypes.Color
+import datatypes.Shapes
 import datatypes.Vector2
-import java.awt.Color as AwtColor
+import java.awt.Dimension
 import java.awt.Graphics
+import java.awt.Graphics2D
+import java.awt.Rectangle
+import java.awt.geom.*
 import javax.swing.JPanel
 
 class Renderable(
-    private val width: Int,
-    private val height: Int,
-    private val position: Vector2,
-    private val color: Color
+    var w: Int,
+    var h: Int,
+    var position: Vector2,
+    var color: Color,
+    var type: Shapes
 ) : JPanel() {
 
     init {
-        // Set the preferred size of the JPanel to match the dimensions of the Renderable
-        preferredSize = java.awt.Dimension(width, height)
+        preferredSize = Dimension(w, h)
     }
 
     override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
-        g.color = color.toAWTColor()
-        g.fillRect(position.x.toInt(), position.y.toInt(), width, height)
+
+        val g2d = g as Graphics2D
+        g2d.color = color.toAWTColor()
+
+        when (type) {
+            Shapes.RECTANGLE -> {
+                val rect = Rectangle(position.x.toInt(), position.y.toInt(), w, h)
+                g2d.fill(rect)
+            }
+            Shapes.ELLIPSE -> {
+                val ellipse = Ellipse2D.Float(position.x, position.y, w.toFloat(), h.toFloat())
+                g2d.fill(ellipse)
+            }
+            Shapes.ROUND_RECTANGLE -> {
+                val roundRect = RoundRectangle2D.Float(position.x, position.y, w.toFloat(), h.toFloat(), 20f, 20f)
+                g2d.fill(roundRect)
+            }
+        }
     }
 
-    // Optionally, you can keep the render method if you need to trigger rendering explicitly
     fun render() {
-        repaint() // Request a repaint to trigger paintComponent
+        repaint()
     }
 }
