@@ -15,6 +15,8 @@ class InputManager : KeyListener, MouseListener, MouseMotionListener, MouseWheel
     private var mouseX: Int = 0
     private var mouseY: Int = 0
     private var mouseWheelRotation: Int = 0
+    private var mouseClicked: Boolean = false
+    private var lastMouseClicked: Boolean = false
 
     // KeyListener methods
     override fun keyPressed(e: KeyEvent) {
@@ -32,6 +34,7 @@ class InputManager : KeyListener, MouseListener, MouseMotionListener, MouseWheel
     // MouseListener methods
     override fun mouseClicked(e: MouseEvent) {
         // Handle mouse clicked events
+        mouseClicked = true
     }
 
     override fun mousePressed(e: MouseEvent) {
@@ -86,6 +89,13 @@ class InputManager : KeyListener, MouseListener, MouseMotionListener, MouseWheel
         return mouseButtonDown.getOrNull(button) ?: false
     }
 
+    fun clicked(): Boolean {
+        val clicked = mouseClicked && !lastMouseClicked
+        lastMouseClicked = mouseClicked
+        mouseClicked = false
+        return clicked
+    }
+
     fun getMouseX(): Int {
         return mouseX
     }
@@ -105,6 +115,8 @@ class InputManager : KeyListener, MouseListener, MouseMotionListener, MouseWheel
         mouseX = 0
         mouseY = 0
         mouseWheelRotation = 0
+        mouseClicked = false
+        lastMouseClicked = false
     }
 
     // Method to attach input listeners to a component

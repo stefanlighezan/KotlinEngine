@@ -5,10 +5,11 @@ import datatypes.Vector2
 import engine.*
 import renderer.Window
 import java.awt.event.KeyEvent
+import java.awt.event.MouseEvent
 import kotlin.random.Random
 
 fun main() {
-    val window = Window("Game Window", 800, 600, visible = true, resizable = false, exitOnClose = true)
+    val window = Window("App", 800, 600, visible = true, resizable = false, exitOnClose = true)
 
     val engine = Engine(window, 60)
     val scene = Scene().apply { gameEngine = engine }
@@ -45,14 +46,14 @@ fun main() {
     }
 
     scene.setUpdateFunction {
-        if(inputManager.isMouseButtonDown(0)) {
+        if(inputManager.clicked()) {
             engine.switchScene(scene2)
             println("er")
         }
     }
 
     scene2.setUpdateFunction {
-        if(inputManager.isMouseButtonDown(0)) {
+        if(inputManager.clicked()) {
             engine.switchScene(scene)
             println("h")
         }

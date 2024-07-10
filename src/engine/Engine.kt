@@ -13,10 +13,10 @@ class Engine(val window: Window, private val fps: Int) {
         }
     }
 
-    private fun gotoNewScene(prev: Int) {
-        scenes[prev].objects.forEach { obj ->
-            window.panel.remove(obj.renderable)
-        }
+    private fun clearPanel() {
+        window.panel.removeAll()
+        window.panel.revalidate()
+        window.panel.repaint()
     }
 
     private fun Update(deltaTime: Float) {
@@ -52,8 +52,18 @@ class Engine(val window: Window, private val fps: Int) {
             return
         }
 
-        gotoNewScene(currentSceneIndex)
+        clearPanel() // Clear the panel of objects from the current scene
+
         currentSceneIndex = newSceneIndex
-        Start()
+
+        // Add objects from the new scene to the rendering panel
+        scenes[currentSceneIndex].objects.forEach { obj ->
+            window.panel.add(obj.renderable)
+        }
+
+        // If the new scene has not been rendered before, call Start
+        if (!scenes[currentSceneIndex].hasBeenRendered) {
+            scenes[currentSceneIndex].Start()
+        }
     }
 }

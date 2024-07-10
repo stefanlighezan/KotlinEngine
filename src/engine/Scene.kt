@@ -19,20 +19,11 @@ class Scene {
 
     fun Start() {
         hasBeenRendered = true
-        base()
         startFunction?.invoke()
     }
 
     fun Update(deltaTime: Float) {
-        base()
         updateFunction?.invoke(deltaTime)
-    }
-
-    fun base() {
-        println(objects.size)
-        objects.forEach { obj ->
-            obj.renderObject()
-        }
     }
 
     fun addObject(obj: Object) {
