@@ -5,64 +5,61 @@ import datatypes.Vector2
 import engine.*
 import renderer.Window
 import java.awt.event.KeyEvent
+import kotlin.random.Random
 
 fun main() {
     val window = Window("Game Window", 800, 600, visible = true, resizable = false, exitOnClose = true)
-    val scene = Scene()
+
+    val engine = Engine(window, 60)
+    val scene = Scene().apply { gameEngine = engine }
+    val scene2 = Scene().apply { gameEngine = engine }
     val inputManager = InputManager()
     inputManager.attachTo(window.panel)
     window.panel.requestFocusInWindow() // Ensure the panel has focus
 
+    val position: SyncVar<Vector2> = SyncVar(Vector2(100f, 100f))
+    val color: SyncVar<Color> = SyncVar(Color(255, 0, 0, 255))
 
     val obj = Object().apply {
         renderable = Renderable(
             w = 100,
             h = 100,
-            position = Vector2(0f, 100f),
-            color = Color(255, 0, 0, 255),
+            position = position.value,
+            color = color.value,
             type = Shapes.RECTANGLE
         )
+
+        scene.addObject(this)
     }
 
-    val position: SyncVar<Vector2> = SyncVar(Vector2(100f, 100f))
+    val obj2 = Object().apply {
+        renderable = Renderable(
+            w = 100,
+            h = 100,
+            position = Vector2(200f, 200f),
+            color = color.value,
+            type = Shapes.ELLIPSE
+        )
 
-    position.addOnChangeListener {
-        obj.renderable!!.position = position.value
+        scene2.addObject(this)
     }
 
-    scene.gameEngine = Engine(window, 60)
-    scene.addObject(obj)
-
-    scene.setStartFunction {
-        println("Started App")
-    }
-
-    var speed: Float
-
-    scene.setUpdateFunction { deltaTime ->
-        println("DeltaTime: $deltaTime")
-
-        // Handle input for object movement
-        speed = 60f * deltaTime // Adjust speed as needed
-        println("Speed: $speed")
-
-        if (inputManager.isKeyDown(KeyEvent.VK_W)) {
-            position.value = Vector2(position.value.x, position.value.y - speed)
-        }
-        if (inputManager.isKeyDown(KeyEvent.VK_S)) {
-            position.value = Vector2(position.value.x, position.value.y + speed)
-        }
-        if (inputManager.isKeyDown(KeyEvent.VK_A)) {
-            position.value = Vector2(position.value.x - speed, position.value.y)
-        }
-        if (inputManager.isKeyDown(KeyEvent.VK_D)) {
-            position.value = Vector2(position.value.x + speed, position.value.y)
+    scene.setUpdateFunction {
+        if(inputManager.isMouseButtonDown(0)) {
+            engine.switchScene(scene2)
+            println("er")
         }
     }
 
+    scene2.setUpdateFunction {
+        if(inputManager.isMouseButtonDown(0)) {
+            engine.switchScene(scene)
+            println("h")
+        }
+    }
 
-
-    scene.gameEngine.addScene(scene)
-    scene.gameEngine.run()
+    engine.addScene(scene)
+    engine.addScene(scene2)
+    engine.run()
 }
 

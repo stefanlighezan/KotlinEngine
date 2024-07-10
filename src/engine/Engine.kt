@@ -7,11 +7,15 @@ class Engine(val window: Window, private val fps: Int) {
     private val scenes: ArrayList<Scene> = arrayListOf()
 
     private fun Start() {
-
         scenes[currentSceneIndex].Start()
-
         scenes[currentSceneIndex].objects.forEach { obj ->
             window.panel.add(obj.renderable)
+        }
+    }
+
+    private fun gotoNewScene(prev: Int) {
+        scenes[prev].objects.forEach { obj ->
+            window.panel.remove(obj.renderable)
         }
     }
 
@@ -38,5 +42,18 @@ class Engine(val window: Window, private val fps: Int) {
 
     fun addScene(scene: Scene) {
         scenes.add(scene)
+    }
+
+    fun switchScene(newScene: Scene) {
+        val newSceneIndex = scenes.indexOf(newScene)
+
+        if (newSceneIndex == -1) {
+            println("Scene not found in the engine.")
+            return
+        }
+
+        gotoNewScene(currentSceneIndex)
+        currentSceneIndex = newSceneIndex
+        Start()
     }
 }

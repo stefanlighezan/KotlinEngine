@@ -24,4 +24,15 @@ data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Int = 2
     fun toAWTColor(): java.awt.Color {
         return java.awt.Color(red, green, blue, alpha)
     }
+
+    fun lerp(other: Color, fraction: Float): Color {
+        val clampedFraction = fraction.coerceIn(0f, 1f)
+
+        val newRed = (red + (other.red - red) * clampedFraction).toInt()
+        val newGreen = (green + (other.green - green) * clampedFraction).toInt()
+        val newBlue = (blue + (other.blue - blue) * clampedFraction).toInt()
+        val newAlpha = (alpha + (other.alpha - alpha) * clampedFraction).toInt()
+
+        return Color(newRed, newGreen, newBlue, newAlpha)
+    }
 }

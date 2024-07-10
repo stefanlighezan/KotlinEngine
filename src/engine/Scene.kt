@@ -7,6 +7,7 @@ class Scene {
     val objects: ArrayList<Object> = arrayListOf()
     private var startFunction: (() -> Unit)? = null
     private var updateFunction: ((Float) -> Unit)? = null
+    public var hasBeenRendered: Boolean = false
 
     fun setStartFunction(start: () -> Unit) {
         startFunction = start
@@ -17,6 +18,7 @@ class Scene {
     }
 
     fun Start() {
+        hasBeenRendered = true
         base()
         startFunction?.invoke()
     }
@@ -26,7 +28,7 @@ class Scene {
         updateFunction?.invoke(deltaTime)
     }
 
-    private fun base() {
+    fun base() {
         println(objects.size)
         objects.forEach { obj ->
             obj.renderObject()
