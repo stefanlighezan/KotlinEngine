@@ -8,7 +8,7 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Rectangle
 import java.awt.geom.*
-import javax.swing.JPanel
+import javax.swing.Box
 
 class Renderable(
     var w: Int,
@@ -16,7 +16,7 @@ class Renderable(
     var position: Vector2,
     var color: Color,
     var type: Shapes
-) : JPanel() {
+) : Box(0) {
 
     init {
         preferredSize = Dimension(w, h)

@@ -35,8 +35,12 @@ class Scene {
 
     fun addObject(obj: Object) {
         objects.add(obj)
+        SwingUtilities.invokeLater {
+            gameEngine.window.panel.add(obj.renderable)
+            gameEngine.window.panel.revalidate()
+            gameEngine.window.panel.repaint()
+        }
         obj.renderable!!.render()
-        obj.renderable!!.repaint()
     }
 
     fun deleteObject(obj: Object) {
