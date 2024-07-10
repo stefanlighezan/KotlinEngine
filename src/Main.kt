@@ -1,7 +1,4 @@
-import datatypes.Color
-import datatypes.Shapes
-import datatypes.SyncVar
-import datatypes.Vector2
+import datatypes.*
 import engine.*
 import renderer.Window
 import java.awt.event.KeyEvent
@@ -33,11 +30,13 @@ fun main() {
         scene.addObject(this)
     }
 
+    val circlePos: SyncVar<Vector2> = SyncVar(Vector2(200f, 200f))
+
     val obj2 = Object().apply {
         renderable = Renderable(
             w = 100,
             h = 100,
-            position = Vector2(200f, 200f),
+            position = circlePos.value,
             color = color.value,
             type = Shapes.ELLIPSE
         )
@@ -52,7 +51,10 @@ fun main() {
         }
     }
 
+
     scene2.setUpdateFunction {
+        circlePos.value = Vector2(circlePos.value.x, y)
+        obj2.renderable!!.render()
         if(inputManager.clicked()) {
             engine.switchScene(scene)
             println("h")
